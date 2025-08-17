@@ -10,7 +10,9 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         VStack {
-            Text("Hello, world!")
+            Text("Today")
+                .font(.title)
+                .fontWeight(.bold)
         }
         .padding()
     }
