@@ -60,6 +60,20 @@ struct ContentView: View {
                     .padding(.vertical, 4)
                     .navigationTitle("My Reminders")
                 }
+                
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button {
+                            showAddReminderView = true
+                        } label: {
+                            Image(systemName: "plus")
+                        }
+                    }
+                }
+                
+                .sheet(isPresented: $showAddReminderView) {
+                    AddReminderView(reminders: $reminders)
+                }
             } // end of scrollview
         } // end of nav stack
 
