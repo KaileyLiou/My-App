@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var reminders: [Reminder] = []
+    @StateObject private var reminderStore = ReminderStore()
     @State private var showAddReminderView: Bool = false
     
     var nextReminder: Reminder? {
-        reminders.sorted { $0.date < $1.date }.first
+        reminderStore.reminders.sorted { $0.date < $1.date }.first
     }
     
     var body: some View {
@@ -70,16 +70,15 @@ struct ContentView: View {
                 Label("Home", systemImage: "house")
             }
             
-            AllRemindersView(reminders: $reminders)
+            AllRemindersView(reminders: $reminderStore.reminders)
                 .tabItem {
                     Label("Reminders", systemImage: "list.bullet")
                 }
             
         } // end of nav stack
         .sheet(isPresented: $showAddReminderView) {
-            AddReminderView(reminders: $reminders)
+            AddReminderView(reminders: $reminderStore.reminders)
         }
-
     }
 }
 

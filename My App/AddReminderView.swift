@@ -30,11 +30,19 @@ struct AddReminderView: View {
                 Button("Save Reminder") {
                     let newReminder = Reminder(title: title, date: date, type: type)
                     reminders.append(newReminder)
+                    NotificationManager.scheduleNotification(for: newReminder)
                     dismiss()
                 }
                 
             }
             .navigationTitle("New Reminder")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+            }
         }
     }
 }

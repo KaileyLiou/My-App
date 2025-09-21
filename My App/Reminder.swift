@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct Reminder: Identifiable {
-    let id = UUID()
+struct Reminder: Identifiable, Codable {
+    var id = UUID()
     var title: String
     var date: Date
     var type: String
