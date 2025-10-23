@@ -17,6 +17,20 @@ struct AddReminderView: View {
     var body: some View {
         
         NavigationStack {
+            ZStack {
+                Color(red: 0.97, green: 0.96, blue: 0.92)
+                    .ignoresSafeArea()
+            }
+            
+            VStack {
+                Text("New Reminder")
+                    .font(.system(size: 28, weight: .semibold, design: .rounded))
+                    .foregroundColor(.black.opacity(0.8))
+                    .padding(.top, 30)
+                    .padding(.bottom, 10)
+            }
+            
+            
             Form {
                 TextField("Enter reminder title", text: $title)
                 DatePicker("Select Date", selection: $date, displayedComponents: .date)
