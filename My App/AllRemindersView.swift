@@ -1,90 +1,9 @@
-////
-////  AllRemindersView.swift
-////  My App
-////
-////  Created by Kailey Liou on 8/24/25.
-////
 //
-//import SwiftUI
+//  AllRemindersView.swift
+//  My App
 //
-//struct AllRemindersView: View {
-//    @Binding var reminders: [Reminder]
-//    @State private var filterSelection: ReminderFilter = .upcoming
-//    @State private var searchText = ""
-//    
-//    enum ReminderFilter: String, CaseIterable, Identifiable {
-//        case upcoming = "Upcoming"
-//        case past = "Past"
-//        case all = "All"
-//        
-//        var id: String { self.rawValue }
-//    }
-//    
-//    var filteredReminders: [Reminder] {
-//        switch filterSelection {
-//        case .upcoming:
-//            return reminders.filter { $0.date >= Calendar.current.startOfDay(for: Date()) }
-//        case .past:
-//            return reminders.filter { $0.date < Calendar.current.startOfDay(for: Date()) }
-//        case .all:
-//            return reminders
-//        }
-//    }
-//    
-//    var body: some View {
-//        NavigationStack {
-//            VStack {
-//                Picker("Filter", selection: $filterSelection) {
-//                    ForEach(ReminderFilter.allCases) { filter in
-//                        Text(filter.rawValue).tag(filter)
-//                    }
-//                }
-//                .pickerStyle(SegmentedPickerStyle())
-//                .padding(.horizontal)
-//                
-//                Group {
-//                    if reminders.isEmpty {
-//                        Text("No reminders found")
-//                            .foregroundColor(.gray)
-//                            .italic()
-//                            .padding()
-//                    } else {
-//                        List {
-//                            ForEach(reminders) { reminder in
-//                                VStack(alignment: .leading) {
-//                                    Text(reminder.title)
-//                                        .font(.headline)
-//                                    Text(reminder.date.formatted(date: .long, time: .omitted))
-//                                        .font(.subheadline)
-//                                        .foregroundColor(.gray)
-//                                    Text(reminder.type)
-//                                        .font(.caption)
-//                                        .foregroundColor(.blue)
-//                                }
-//                                .padding(.vertical, 4)
-//                            }
-//                            .onDelete(perform: deleteReminder)
-//                        }
-//                        .listStyle(PlainListStyle())
-//                    }
-//                }
-//                .navigationTitle("All Reminders")
-//                .searchable(text: $searchText, prompt: "Search by title or type")
-//                
-//            }
-//            
-//        }
-//    }
-//    func deleteReminder(at offsets: IndexSet) {
-//        reminders.remove(atOffsets: offsets)
-//    }
-//}
+//  Created by Kailey Liou on 8/24/25.
 //
-//struct AllRemindersView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AllRemindersView(reminders: .constant([]))
-//    }
-//}
 
 import SwiftUI
 
@@ -124,12 +43,10 @@ struct AllRemindersView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Subtle background to match AddReminderView
                 Color(red: 0.97, green: 0.96, blue: 0.92)
                     .ignoresSafeArea()
                 
                 VStack(spacing: 15) {
-                    // Filter picker
                     Picker("Filter", selection: $filterSelection) {
                         ForEach(ReminderFilter.allCases) { filter in
                             Text(filter.rawValue).tag(filter)
@@ -139,7 +56,6 @@ struct AllRemindersView: View {
                     .padding(.horizontal)
                     .padding(.top, 10)
                     
-                    // Reminder list area
                     if filteredReminders.isEmpty {
                         Spacer()
                         VStack {
@@ -153,16 +69,15 @@ struct AllRemindersView: View {
                         }
                         Spacer()
                     } else {
-                        ScrollView {
-                            LazyVStack(spacing: 12) {
-                                ForEach(filteredReminders) { reminder in
-                                    ReminderCard(reminder: reminder)
-                                        .padding(.horizontal)
-                                }
-                                .onDelete(perform: deleteReminder)
+                        List {
+                            ForEach(filteredReminders) { reminder in
+                                ReminderCard(reminder: reminder)
+                                    .listRowBackground(Color.clear)
+                                    .listRowSeparator(.hidden)
                             }
-                            .padding(.vertical)
+                            .onDelete(perform: deleteReminder)
                         }
+                        .listStyle(PlainListStyle())
                     }
                 }
                 .navigationTitle("All Reminders")

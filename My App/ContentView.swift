@@ -165,22 +165,22 @@ struct ContentView: View {
                         
                         if !profile.name.isEmpty {
                             Text("Hi, \(profile.name)!")
-                                .font(.title3)
+                                .font(.title2)
                                 .foregroundColor(.white.opacity(0.85))
                         } else {
                             Text("Welcome!")
-                                .font(.title3)
+                                .font(.title2)
                                 .foregroundColor(.white.opacity(0.85))
                         }
                         
                         if !reminders.isEmpty {
                             Text(nextReminderText)
-                                .font(.subheadline)
+                                .font(.title2)
                                 .foregroundColor(.white.opacity(0.85))
                         }
                     }
                     .padding(.top, 20)
-                    
+
                     VStack(spacing: 18) {
                         Button {
                             if profile.name.isEmpty {
