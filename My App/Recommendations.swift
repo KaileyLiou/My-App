@@ -23,6 +23,23 @@ struct VaccineRecommendations {
         
         reminders.append(makeReminder(title: "Flu Shot (Annual)", type: "Vaccine", yearsFromNow: 0))
         
+        if age < 1 {
+            reminders.append(makeReminder(title: "Hepatitis B Vaccine", type: "Vaccine", yearsFromNow: 0))
+            reminders.append(makeReminder(title: "DTaP Vaccine", type: "Vaccine", yearsFromNow: 0))
+            reminders.append(makeReminder(title: "Polio Vaccine", type: "Vaccine", yearsFromNow: 0))
+            reminders.append(makeReminder(title: "Hib Vaccine", type: "Vaccine", yearsFromNow: 0))
+        }
+        
+        if age >= 1 && age < 2 {
+            reminders.append(makeReminder(title: "MMR Vaccine", type: "Vaccine", yearsFromNow: 0))
+            reminders.append(makeReminder(title: "Varicella Vaccine", type: "Vaccine", yearsFromNow: 0))
+        }
+        
+        if age >= 2 && age < 5 {
+            reminders.append(makeReminder(title: "DTaP Booster", type: "Vaccine", yearsFromNow: 0))
+            reminders.append(makeReminder(title: "Polio Booster", type: "Vaccine", yearsFromNow: 0))
+        }
+                
         if age >= 19 {
             reminders.append(makeReminder(title: "Tdap Booster (Every 10 Years)", type: "Vaccine", yearsFromNow: 0))
         }
@@ -44,7 +61,7 @@ struct VaccineRecommendations {
         }
         
         if age >= 45 {
-            reminders.append(makeReminder(title: "Colorectal Cancer Screening (every 10 years)", type: "Screening", yearsFromNow: 0))
+            reminders.append(makeReminder(title: "Colorectal Cancer Screening (every 3 years)", type: "Screening", yearsFromNow: 0))
         }
         
         if age >= 20 {

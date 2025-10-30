@@ -276,14 +276,6 @@ struct ContentView: View {
                         }
                         .padding(.horizontal)
                         
-                        Button("Reset Reminders") {
-                            reminderStore.reminders.removeAll()
-                        }
-                        .padding()
-                        .background(Color.red.opacity(0.8))
-                        .cornerRadius(10)
-                        .foregroundColor(.white)
-                        
                         Spacer()
                     }
                     .toolbar {
