@@ -10,17 +10,19 @@ import UserNotifications
 
 @main
 struct My_AppApp: App {
+    init() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if let error = error {
+                print("Notification permission error: \(error.localizedDescription)")
+            } else {
+                print("Notification permission granted: \(granted)")
+            }
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .onAppear {
-                    UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-                        if let error = error {
-                            print("Notification permission error: \(error)")
-                        }
-                        print("Permission granted: \(granted)")
-                    }
-                }
         }
     }
 }

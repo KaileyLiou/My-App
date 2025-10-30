@@ -99,7 +99,7 @@ struct ReminderCard: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(reminder.title)
                     .font(.headline)
-                    .foregroundColor(.black.opacity(0.85))
+                    .foregroundColor(.black)
                 
                 Text(reminder.date.formatted(date: .abbreviated, time: .omitted))
                     .font(.subheadline)

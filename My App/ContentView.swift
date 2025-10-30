@@ -136,14 +136,14 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var reminders: [Reminder] = []
-    @State private var profile = Profile(name: "", dateOfBirth: Date(), gender: "", conditions: [])
+    @StateObject private var reminderStore = ReminderStore()
+    @StateObject private var profileStore = ProfileStore()
     @State private var showingAddReminder = false
     @State private var showingProfile = false
     @State private var showProfileAlert = false
     
     var nextReminderText: String {
-        if let next = reminders.filter({ $0.date >= Date() }).sorted(by: { $0.date < $1.date }).first {
+        if let next = reminderStore.reminders.filter({ $0.date >= Date() }).sorted(by: { $0.date < $1.date }).first {
             let formattedDate = next.date.formatted(date: .abbreviated, time: .omitted)
             return "Next: \(next.title) on \(formattedDate)"
         } else {
@@ -163,32 +163,66 @@ struct ContentView: View {
                                 .font(.system(size: 36, weight: .bold, design: .rounded))
                                 .foregroundColor(.white)
                             
-                            if !profile.name.isEmpty {
-                                Text("Hi, \(profile.name)!")
-                                    .font(.title2)
-                                    .foregroundColor(.white.opacity(0.85))
-                            } else {
-                                Text("Welcome!")
-                                    .font(.title2)
-                                    .foregroundColor(.white.opacity(0.85))
+                            VStack(spacing: 10) {
+                                if !profileStore.profile.name.isEmpty {
+                                    Text("Welcome, \(profileStore.profile.name)!")
+                                        .font(.title2)
+                                        .foregroundColor(.white.opacity(0.85))
+                                } else {
+                                    Text("Welcome!")
+                                        .font(.title2)
+                                        .foregroundColor(.white.opacity(0.85))
+                                }
+                                Spacer().frame(height: 10)
                             }
+                            .padding(.top, 20)
                             
-                            if !reminders.isEmpty {
-                                Text(nextReminderText)
-                                    .font(.title2)
-                                    .foregroundColor(.white.opacity(0.85))
+                            VStack {
+                                if let next = reminderStore.reminders
+                                    .filter({ $0.date >= Date() })
+                                    .sorted(by: { $0.date < $1.date })
+                                    .first {
+
+                                    VStack(spacing: 6) {
+                                        Text("Next Reminder")
+                                            .font(.headline)
+                                            .foregroundColor(.white.opacity(0.9))
+                                        Text(next.title)
+                                            .font(.title2.bold())
+                                            .foregroundColor(.white)
+                                        Text(next.date.formatted(date: .abbreviated, time: .omitted))
+                                            .font(.subheadline)
+                                            .foregroundColor(.white.opacity(0.8))
+                                    }
+                                    .padding()
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.white.opacity(0.15))
+                                    .cornerRadius(12)
+                                    .shadow(color: .black.opacity(0.2), radius: 5, x: 0, y: 3)
+                                    .padding(.horizontal)
+                                } else {
+                                    Text("No upcoming reminders")
+                                        .font(.headline)
+                                        .foregroundColor(.white.opacity(0.8))
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .background(Color.white.opacity(0.1))
+                                        .cornerRadius(12)
+                                        .padding(.horizontal)
+                                }
                             }
+
                         }
                         .padding(.top, 20)
 
                         VStack(spacing: 18) {
                             Button {
-                                if profile.name.isEmpty {
+                                if profileStore.profile.name.isEmpty {
                                     // No profile yet
                                     showProfileAlert = true
                                 } else {
-                                    let newReminders = VaccineRecommendations.recommendedReminders(for: profile)
-                                    reminders.append(contentsOf: newReminders)
+                                    let newReminders = VaccineRecommendations.recommendedReminders(for: profileStore.profile)
+                                    reminderStore.reminders.append(contentsOf: newReminders)
                                 }
                             } label: {
                                 DashboardCard(
@@ -216,7 +250,7 @@ struct ContentView: View {
                             }
                             
                             NavigationLink {
-                                AllRemindersView(reminders: $reminders)
+                                AllRemindersView(reminders: $reminderStore.reminders)
                             } label: {
                                 DashboardCard(
                                     title: "View All Reminders",
@@ -242,10 +276,10 @@ struct ContentView: View {
                         }
                     }
                     .sheet(isPresented: $showingAddReminder) {
-                        AddReminderView(reminders: $reminders)
+                        AddReminderView(reminders: $reminderStore.reminders)
                     }
                     .sheet(isPresented: $showingProfile) {
-                        ProfileView(profile: $profile)
+                        ProfileView(profile: $profileStore.profile)
                     }
                     .navigationTitle("")
                     .navigationBarTitleDisplayMode(.inline)
