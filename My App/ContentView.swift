@@ -143,7 +143,10 @@ struct ContentView: View {
     @State private var showProfileAlert = false
     
     var nextReminderText: String {
-        if let next = reminderStore.reminders.filter({ $0.date >= Date() }).sorted(by: { $0.date < $1.date }).first {
+        if let next = reminderStore.reminders
+            .filter({ $0.date.isTodayOrLater() })
+            .sorted(by: { $0.date < $1.date })
+            .first {
             let formattedDate = next.date.formatted(date: .abbreviated, time: .omitted)
             return "Next: \(next.title) on \(formattedDate)"
         } else {
@@ -179,7 +182,7 @@ struct ContentView: View {
                             
                             VStack {
                                 if let next = reminderStore.reminders
-                                    .filter({ $0.date >= Date() })
+                                    .filter({ $0.date.isTodayOrLater() })
                                     .sorted(by: { $0.date < $1.date })
                                     .first {
 
@@ -218,11 +221,21 @@ struct ContentView: View {
                         VStack(spacing: 18) {
                             Button {
                                 if profileStore.profile.name.isEmpty {
-                                    // No profile yet
                                     showProfileAlert = true
                                 } else {
                                     let newReminders = VaccineRecommendations.recommendedReminders(for: profileStore.profile)
-                                    reminderStore.reminders.append(contentsOf: newReminders)
+
+                                    let uniqueReminders = newReminders.filter { newReminder in
+                                        !reminderStore.reminders.contains(where: { existing in
+                                            existing.title == newReminder.title && existing.date == newReminder.date
+                                        })
+                                    }
+                                    
+                                    if !uniqueReminders.isEmpty {
+                                        withAnimation {
+                                            reminderStore.reminders.append(contentsOf: uniqueReminders)
+                                        }
+                                    }
                                 }
                             } label: {
                                 DashboardCard(
@@ -232,6 +245,7 @@ struct ContentView: View {
                                     background: Color.white
                                 )
                             }
+
                             .alert("Please create a profile first", isPresented: $showProfileAlert) {
                                 Button("OK") {
                                     showingProfile = true
@@ -261,6 +275,14 @@ struct ContentView: View {
                             }
                         }
                         .padding(.horizontal)
+                        
+                        Button("Reset Reminders") {
+                            reminderStore.reminders.removeAll()
+                        }
+                        .padding()
+                        .background(Color.red.opacity(0.8))
+                        .cornerRadius(10)
+                        .foregroundColor(.white)
                         
                         Spacer()
                     }
